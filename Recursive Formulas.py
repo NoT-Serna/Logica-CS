@@ -44,10 +44,20 @@ class Binary(Formula):
 
 if __name__ == "__main__":
     p = Letter("p")
+    print("Varaible" , p)
     q = Letter("q")
+    print("Varaible" , q)
+
     a1 = Negation(p)
-    print(a1)
+    print("Formula #1 ", a1)
 
-    a2 = N
+    a2 = Binary(">", a1,q)
+    print("Formula #2", a2)
 
+    a3 = Negation(Binary("Y",p,Negation(q)))
+    print( "Formula #3 " , a3)
+
+   # print("There are " ,a2.num_connec(), " connectors in the second formula ")
+   # print("There are " ,a3.num_connec(), " connectors in the third formula ")
+    
 
