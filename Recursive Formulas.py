@@ -1,3 +1,4 @@
+from itertools import product
 #Recursive Formulas
 #Defintion of the clases:
 class Formula():
@@ -74,6 +75,22 @@ class Formula():
         elif self == Binary:
             return Binary(self.connector, self.left.sust(n,n1), self.right.sust(n,n1))
 
+    def value(self, I):
+        if type(self) == Letter:
+            return I[self.letter]
+        elif type(self) == Negation:
+            return not self.subf.value(I)
+        elif type(self) == Binary:
+            if self.connector == "Y":
+                return self.left.value(I) and self.right.value(I)
+            if self.connector == "O":
+                return self.left.value(I) or self.right.value(I)
+            if self.connector == ">":
+                return not self.left.value(I) or self.right.value(I)
+            if self.connector == "=":
+                return  (self.left.value(I) and self.right.value(I)) or (not self.left.value(I) and not self.right.value(I))
+
+
 class Letter(Formula):
     def __init__(self, letter):
         self.letter = letter
@@ -123,6 +140,8 @@ if __name__ == "__main__":
     print("Formula #5 ", a5)
 
 
+    I = {"p": True, "q": False}
+    print(f"{a1} tiene el valor {a1.value(I)}")
 
     #print("There are " ,a1.num_connec(), " connectors in the second formula ")
     #print("There are " ,a2.num_connec(), " connectors in the second formula ")
@@ -130,8 +149,6 @@ if __name__ == "__main__":
     #print(a4.num_connec())
     #print(a5.num_connec())
     #print(a4.num_bin())
-    print(a4.letters())
-    print(a1.sust(p,r))
 
   
     
