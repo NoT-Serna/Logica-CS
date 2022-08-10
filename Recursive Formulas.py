@@ -47,6 +47,32 @@ class Formula():
             return 0 + self.subf.num_bin()
         elif type(self) == Binary:
             return 1 + self.left.num_bin() + self.right.num_bin()
+    
+    def letters(self):
+        if type(self) == Letter:
+            return {self.letter}
+        elif type(self) == Negation:
+            return {self.subf.letters()}
+        elif type(self) == Binary:
+            return self.left.letters() | self.right.letters()
+    
+    def sub_forms(self):
+        if type(self) == Letter:
+            return {self}
+        elif type(self) == Negation:
+            return {self}| self.subf.sub_forms()
+        elif type(self) == Binary:
+            return {self}|self.left.sub_forms()|self.right.sub_forms()
+    
+    def sust(self, n, n1):
+        if n not in self.sub_forms():
+            return self
+        elif n == self:
+            return n1
+        elif self == Negation:
+            return Negation(self.subf.sust(n,n1))
+        elif self == Binary:
+            return Binary(self.connector, self.left.sust(n,n1), self.right.sust(n,n1))
 
 class Letter(Formula):
     def __init__(self, letter):
@@ -103,7 +129,9 @@ if __name__ == "__main__":
     #print("There are " ,a3.num_connec(), " connectors in the third formula ")
     #print(a4.num_connec())
     #print(a5.num_connec())
-    print(a4.num_bin())
+    #print(a4.num_bin())
+    print(a4.letters())
+    print(a1.sust(p,r))
 
   
     
