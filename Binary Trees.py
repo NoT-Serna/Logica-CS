@@ -18,7 +18,7 @@ if tree.left == None:
 else:
     print("branch")
 """
-tree = tree_2
+tree = tree_3
 #Number of leafs in a tree
 def num_leaves(tree):
     if tree.left == None:
@@ -39,15 +39,19 @@ def num_nodes(tree):
     if tree.left == None: 
         return 0
     else:
-        return num_edges(tree)+ 1
+        return 1 + num_nodes(tree.left) + num_nodes(tree.right)
 
-
-
+def short_edge(tree):
+    if tree.left == None:
+        return 1
+    else: 
+        return  2- short_edge(tree.left) - short_edge(tree.right)
 
 
 if __name__ == "__main__":
     print("The binary tree has", num_leaves(tree) , "leaves")
     print("The binary tree has", num_edges(tree), "edges")
     print ("The binary tree has", num_nodes(tree), "nodes")
+    print(short_edge(tree))
 
         
