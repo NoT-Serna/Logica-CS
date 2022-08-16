@@ -55,7 +55,7 @@ class Formula():
         elif type(self) == Negation:
             return {self.subf.letters()}
         elif type(self) == Binary:
-            return self.left.letters() | self.right.letters()
+            return self.left.letters() | self.right.letters() 
     
     def sub_forms(self):
         if type(self) == Letter:
@@ -89,6 +89,28 @@ class Formula():
                 return not self.left.value(I) or self.right.value(I)
             if self.connector == "=":
                 return  (self.left.value(I) and self.right.value(I)) or (not self.left.value(I) and not self.right.value(I))
+    
+
+def inorder_to_tree(cadena):
+    connector = ["Y", "O", ">", "="]
+    if len(cadena) == 1:
+        return Letter(cadena)
+    elif cadena[0] == "-":
+        return Negation(inorder_to_tree(cadena[1::]))
+    elif cadena[0] == "(":
+        counter = 0
+        for i in range(1,len(cadena)):
+            if cadena[i] == "(":
+                counter +=1
+            elif cadena[i] == ")":
+                counter -=1
+            elif cadena[i] in connector and counter == 0:
+                return Binary(cadena[i], inorder_to_tree(cadena[1:i]),inorder_to_tree(cadena[i + 1:-1]))
+    else:
+            raise Exception('¡Cadena inválida!')
+        
+
+    
 
 
 class Letter(Formula):
@@ -149,6 +171,9 @@ if __name__ == "__main__":
     #print(a4.num_connec())
     #print(a5.num_connec())
     #print(a4.num_bin())
+    prueba = "(-p>((pY-q)>(pYq)))"
+    Tree = inorder_to_tree(prueba)
+    print(Tree)
 
   
     
