@@ -174,7 +174,7 @@ if __name__ == "__main__":
     prueba = "(-p>((pY-q)>(pYq)))"
     Tree = inorder_to_tree(prueba)
     print(Tree)
-
+    print(Tree.num_bin())
   
     
 
