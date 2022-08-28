@@ -1,9 +1,15 @@
 from itertools import product
+from copy import deepcopy
+from tkinter import NE
 #Recursive Formulas
 #Defintion of the clases:
 class Formula():
     def __init__(self):
         pass
+
+    def delete_double_imp(self):
+        pass
+
 
 #Methods
     def __str__(self):
@@ -89,6 +95,63 @@ class Formula():
                 return not self.left.value(I) or self.right.value(I)
             if self.connector == "=":
                 return  (self.left.value(I) and self.right.value(I)) or (not self.left.value(I) and not self.right.value(I))
+    
+    def delete_double_imp(self):
+        if type(self) == Letter:
+            return self
+        elif type(self) == Negation:
+            return Negation(self.subf.delete_double_imp())
+        elif type(self) == Binary:
+            if self.connector == "=":
+                return Binary("Y",
+                            Binary("O",
+                                Negation(self.left.delete_double_imp()),
+                                self.right.delete_double_imp(),
+                                ),
+                            Binary("O",
+                                Negation(self.right.delete_double_imp()),
+                                self.left.delete_double_imp(),
+                                ))
+            else:
+                return Binary(self.connector,
+                        self.left.delete_double_imp(),
+                        self.right.delete_double_imp()
+                        )
+
+    def delete_double_negation(self):
+        if type(self) == Letter:
+            return self
+        elif type(self) == Negation:
+            if type(self.subf) == Negation:
+                return deepcopy(self.subf.subf.delete_double_negation())
+            else:
+                return Negation(self.subf.delete_double_negation())
+        elif type(self) == Binary:
+            return Binary(self.connector,
+                           self.left.delete_double_negation(),
+                           self.right.delete_double_negation())
+    
+    def change_morgan_and(self):
+        if type(self) == Letter:
+            return self
+        elif type(self) == Negation:
+            if type(self.subf) == Binary:
+                if self.subf.connector == "Y":
+                    return Binary("O",
+                                Negation(self.subf.left.change_morgan_and()),
+                                Negation(self.subf.right.change_morgan_and())
+                                )
+                else:
+                    return Negation(self.subf.change_morgan_and())
+            else:
+                return Negation(self.subf.change_morgan_and())
+        elif type(self) == Binary:
+            return Binary(self.connector,
+                           self.left.change_morgan_and(),
+                           self.right.change_morgan_and())
+    
+    
+
     
 
 def inorder_to_tree(cadena):
